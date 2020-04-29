@@ -127,14 +127,15 @@ namespace LibGit2Sharp.Core
                     { GitErrorCode.Conflict, (m, r, c) => new CheckoutConflictException(m, r, c) },
                     { GitErrorCode.LockedFile, (m, r, c) => new LockedFileException(m, r, c) },
                     { GitErrorCode.NotFound, (m, r, c) => new NotFoundException(m, r, c) },
-                    { GitErrorCode.Peel, (m, r, c) => new PeelException(m, r, c)  },
+                    { GitErrorCode.Peel, (m, r, c) => new PeelException(m, r, c) },
+                    { GitErrorCode.Auth, (m, r, c) => new AuthenticationException(m, r, c) },
                 };
 
         private static unsafe void HandleError(int result)
         {
             string errorMessage;
             GitErrorCategory errorCategory = GitErrorCategory.Unknown;
-            GitError* error = NativeMethods.git_error_last();
+            GitError* error = NativeMethods.giterr_last();
 
             if (error == null)
             {

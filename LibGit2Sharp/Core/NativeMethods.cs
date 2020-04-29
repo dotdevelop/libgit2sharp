@@ -216,15 +216,15 @@ namespace LibGit2Sharp.Core
         }
 
         [DllImport(libgit2, CallingConvention = CallingConvention.Cdecl)]
-        internal static extern unsafe GitError* git_error_last();
+        internal static extern unsafe GitError* giterr_last();
 
         [DllImport(libgit2, CallingConvention = CallingConvention.Cdecl)]
-        internal static extern void git_error_set_str(
+        internal static extern void giterr_set_str(
             GitErrorCategory error_class,
             [MarshalAs(UnmanagedType.CustomMarshaler, MarshalCookie = UniqueId.UniqueIdentifier, MarshalTypeRef = typeof(StrictUtf8Marshaler))] string errorString);
 
         [DllImport(libgit2, CallingConvention = CallingConvention.Cdecl)]
-        internal static extern void git_error_set_oom();
+        internal static extern void giterr_set_oom();
 
         [DllImport(libgit2, CallingConvention = CallingConvention.Cdecl)]
         internal static extern unsafe UInt32 git_blame_get_hunk_count(git_blame* blame);
@@ -406,7 +406,7 @@ namespace LibGit2Sharp.Core
             [MarshalAs(UnmanagedType.CustomMarshaler, MarshalCookie = UniqueId.UniqueIdentifier, MarshalTypeRef = typeof(StrictUtf8Marshaler))] string referenceName);
 
         [DllImport(libgit2, CallingConvention = CallingConvention.Cdecl)]
-        internal static extern void git_buf_dispose(GitBuf buf);
+        internal static extern void git_buf_free(GitBuf buf);
 
         [DllImport(libgit2, CallingConvention = CallingConvention.Cdecl)]
         internal static extern unsafe int git_checkout_tree(
@@ -647,6 +647,24 @@ namespace LibGit2Sharp.Core
             [MarshalAs(UnmanagedType.CustomMarshaler, MarshalCookie = UniqueId.UniqueIdentifier, MarshalTypeRef = typeof(StrictUtf8Marshaler))] string password);
 
         [DllImport(libgit2, CallingConvention = CallingConvention.Cdecl)]
+        internal static extern int git_cred_ssh_key_new(
+            out IntPtr cred,
+            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalCookie = UniqueId.UniqueIdentifier, MarshalTypeRef = typeof(StrictUtf8Marshaler))] string username,
+            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalCookie = UniqueId.UniqueIdentifier, MarshalTypeRef = typeof(StrictUtf8Marshaler))] string publickey,
+            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalCookie = UniqueId.UniqueIdentifier, MarshalTypeRef = typeof(StrictUtf8Marshaler))] string privatekey,
+            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalCookie = UniqueId.UniqueIdentifier, MarshalTypeRef = typeof(StrictUtf8Marshaler))] string passphrase);
+
+        [DllImport(libgit2, CallingConvention = CallingConvention.Cdecl)]
+        internal static extern int git_cred_ssh_key_from_agent(
+            out IntPtr cred,
+            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalCookie = UniqueId.UniqueIdentifier, MarshalTypeRef = typeof(StrictUtf8Marshaler))] string username);
+
+        [DllImport(libgit2, CallingConvention = CallingConvention.Cdecl)]
+        internal static extern int git_cred_username_new(
+            out IntPtr cred,
+            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalCookie = UniqueId.UniqueIdentifier, MarshalTypeRef = typeof(StrictUtf8Marshaler))] string username);
+
+        [DllImport(libgit2, CallingConvention = CallingConvention.Cdecl)]
         internal static extern void git_cred_free(IntPtr cred);
 
         [DllImport(libgit2, CallingConvention = CallingConvention.Cdecl)]
@@ -752,7 +770,12 @@ namespace LibGit2Sharp.Core
         [DllImport(libgit2, CallingConvention = CallingConvention.Cdecl)]
         internal static extern unsafe int git_diff_find_similar(
             git_diff* diff,
-            GitDiffFindOptions options);
+            IntPtr options);
+
+        [DllImport(libgit2)]
+        internal static extern unsafe int git_diff_find_similar(
+            git_diff* diff,
+            ref GitDiffFindOptions options);
 
         [DllImport(libgit2, CallingConvention = CallingConvention.Cdecl)]
         internal static extern unsafe UIntPtr git_diff_num_deltas(git_diff* diff);
