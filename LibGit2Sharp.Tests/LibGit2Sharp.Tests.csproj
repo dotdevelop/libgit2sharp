@@ -1,14 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net472;net48;netcoreapp3.1</TargetFrameworks> 
-  </PropertyGroup>
+    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+    <RuntimeIdentifiers>linux-x64</RuntimeIdentifiers>  </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\LibGit2Sharp\LibGit2Sharp.csproj" />
-    <ProjectReference Include="..\NativeLibraryLoadTestApp\x86\NativeLibraryLoadTestApp.x86.csproj" Condition="'$(TargetFramework)' == 'net46'" ReferenceOutputAssembly="false" OutputItemType="TestAppExe" />
-    <ProjectReference Include="..\NativeLibraryLoadTestApp\x64\NativeLibraryLoadTestApp.x64.csproj" Condition="'$(TargetFramework)' == 'net46'" ReferenceOutputAssembly="false" OutputItemType="TestAppExe" />
-  </ItemGroup>
+   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="coverlet.msbuild" Version="2.7.0" />
