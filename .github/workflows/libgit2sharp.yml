@@ -25,11 +25,14 @@ jobs:
       run:  dotnet build --no-restore LibGit2Sharp.sln
     - name: Pack
       run: |
-            echo running on branch $(echo ${GITHUB_SHA} | cut -c1-8)
+            echo running on branch $(echo ${GITHUB_SHA} | cut -c1-10)
             dotnet pack --include-symbols -c Release LibGit2Sharp.sln
             ls ./bin/Packages/Release/
-            echo "::set-output name=short_sha::$(echo ${GITHUB_SHA} | cut -c1-8) "
-
+           
+    - name: Short Sha
+      id: short-sha
+      run:  echo "::set-output name=short_sha::$(echo ${GITHUB_SHA} | cut -c1-10) "
+      
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
@@ -47,7 +50,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-          asset_path: ./bin/Packages/Release/LibGit2Sharp.0.27.0-preview-g${{ github.sha }}.nupkg
+          asset_path: ./bin/Packages/Release/LibGit2Sharp.0.27.0-preview-g${{ steps.short-sha.putput.short_sha }}.nupkg
           asset_name: LibGit2Sharp.0.27.0-preview-g${{ github.sha }}.nupkg
           asset_content_type: application/nupkg      
       
