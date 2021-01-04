@@ -31,7 +31,7 @@ jobs:
            
     - name: Short Sha
       id: short-sha
-      run:  echo "::set-output name=short_sha::$(echo ${GITHUB_SHA} | cut -c1-10) "
+      run:  echo "::set-output name=short_sha::$(echo ${GITHUB_SHA} | cut -c1-10)"
       
     - name: Create Release
       id: create_release
