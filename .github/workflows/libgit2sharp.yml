@@ -25,7 +25,7 @@ jobs:
       run:  dotnet build --no-restore LibGit2Sharp.sln
     - name: Pack
       run: |
-            echo running on branch ${GITHUB_REF##*/}
+            echo running on branch $(echo ${GITHUB_SHA} | cut -c1-8)
             dotnet pack --include-symbols -c Release LibGit2Sharp.sln
             ls ./bin/Packages/Release/
             echo "::set-output name=short_sha::$(echo ${GITHUB_SHA} | cut -c1-8) "
