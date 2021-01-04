@@ -28,10 +28,6 @@ jobs:
             echo running on branch ${GITHUB_REF##*/}
             dotnet pack --include-symbols -c Release LibGit2Sharp.sln
             ls ./bin/Packages/Release/
-    - name: Short Sha
-      id: short_sha
-      env: 
-        SHORT_SHA: ${{ GITHUB_REF##*/ }}
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
