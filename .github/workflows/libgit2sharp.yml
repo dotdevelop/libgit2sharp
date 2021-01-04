@@ -28,6 +28,8 @@ jobs:
             echo running on branch ${GITHUB_REF##*/}
             dotnet pack --include-symbols -c Release LibGit2Sharp.sln
             ls ./bin/Packages/Release/
+            echo "::set-output name=short_sha::$(echo ${GITHUB_SHA} | cut -c1-8) "
+
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
@@ -43,7 +45,6 @@ jobs:
       uses: actions/upload-release-asset@v1
       env: 
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SHORT_SHA: $(echo ${GITHUB_SHA} | cut -c1-8) 
       with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
           asset_path: ./bin/Packages/Release/LibGit2Sharp.0.27.0-preview-g${{ github.sha }}.nupkg
