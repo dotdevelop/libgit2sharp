@@ -32,6 +32,9 @@ jobs:
     - name: Short Sha
       id: short-sha
       run:  echo "::set-output name=short_sha::$(echo ${GITHUB_SHA} | cut -c1-10)"
+
+    - name: Push generated package to GitHub registry
+      run: dotnet nuget push ./bin/Packages/Release/LibGit2Sharp.0.27.0-preview-g${{steps.short-sha.outputs.short_sha}}.nupkg --source https://nuget.pkg.github.com/dotdevelop --api-key ${{github.token}} --skip-duplicate --no-symbols true
       
     - name: Create Release
       id: create_release
