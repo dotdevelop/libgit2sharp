@@ -2,7 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/AArnott/Nerdbank.GitVersioning/master/src/NerdBank.GitVersioning/version.schema.json",
   "version": "0.27.0-preview",
   "publicReleaseRefSpec": [
-    "^refs/heads/dotdevelop$",                  // we release out of master
+    "^refs/heads/dotdevelop$",                  // we release out of dotdevelop
     "^refs/heads/maint/v\\d+(?:\\.\\d+)?$"  // and maint/vNN branches
   ],
   "cloudBuild": {

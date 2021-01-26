@@ -28,18 +28,18 @@ jobs:
             echo running on branch $(echo ${GITHUB_SHA} | cut -c1-10)
             dotnet pack --include-symbols -c Release LibGit2Sharp.sln
             ls ./bin/Packages/Release/
-           
+
     - name: Short Sha
       id: short-sha
       run:  echo "::set-output name=short_sha::$(echo ${GITHUB_SHA} | cut -c1-10)"
 
     - name: Push generated package to GitHub registry
       run: dotnet nuget push ./bin/Packages/Release/LibGit2Sharp.0.27.0-preview-g${{steps.short-sha.outputs.short_sha}}.nupkg --source https://nuget.pkg.github.com/dotdevelop --api-key ${{github.token}} --skip-duplicate --no-symbols true
-      
+
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
-      env: 
+      env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
           tag_name: ${{ github.ref }}
@@ -47,17 +47,17 @@ jobs:
           draft: true
           prerelease: true
     - name: Upload Release Asset
-      id: upload-release-asset 
+      id: upload-release-asset
       uses: actions/upload-release-asset@v1
-      env: 
+      env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SHORT_SHA: ${{ steps.short-sha.outputs.short_sha }}
       with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
           asset_path: ./bin/Packages/Release/LibGit2Sharp.0.27.0-preview-g${{steps.short-sha.outputs.short_sha}}.nupkg
           asset_name: LibGit2Sharp.0.27.0-preview-g${{steps.short-sha.outputs.short_sha}}.nupkg
-          asset_content_type: application/nupkg      
-      
+          asset_content_type: application/nupkg
+
   test:
     runs-on: ubuntu-20.04
 
@@ -73,6 +73,6 @@ jobs:
       run: dotnet restore LibGit2Sharp.sln
     - name: Build
       run: dotnet build --no-restore LibGit2Sharp.sln
-      
+
     - name: Test
       run: dotnet test --no-build --verbosity normal LibGit2Sharp.sln
