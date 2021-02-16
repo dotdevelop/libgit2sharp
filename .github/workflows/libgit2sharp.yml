@@ -2,9 +2,9 @@ name: .NET
 
 on:
   push:
-    branches: [ dotdevelop_tryBuild ]
+    branches: [ dd/issues/2 ]
   pull_request:
-    branches: [ dotdevelop_tryBuild ]
+    branches: [ dd/issues/2 ]
 
 jobs:
   build:
