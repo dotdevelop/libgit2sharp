@@ -11,7 +11,21 @@ jobs:
 
     runs-on: ubuntu-20.04
 
+    container:
+      image: "debian:buster"
+      
     steps:
+    - name: Dependencies
+      run: |
+        apt update
+        apt upgrade -y
+        apt install git apt-transport-https dirmngr gnupg ca-certificates wget autoconf intltool build-essential sed -y
+        wget https://packages.microsoft.com/config/debian/10/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+        dpkg -i packages-microsoft-prod.deb
+        apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+        echo "deb https://download.mono-project.com/repo/debian stable-buster main" > /etc/apt/sources.list.d/mono-official-stable.list
+        apt update
+        apt install mono-devel fsharp gtk-sharp2 -y
     - uses: actions/checkout@v2
       with:
           fetch-depth: 0
@@ -23,56 +37,6 @@ jobs:
       run: dotnet restore LibGit2Sharp.sln
     - name: Build
       run:  dotnet build --no-restore LibGit2Sharp.sln
-    - name: Pack
-      run: |
-            echo running on branch $(echo ${GITHUB_SHA} | cut -c1-10)
-            dotnet pack --include-symbols -c Release LibGit2Sharp.sln
-            ls ./bin/Packages/Release/
-
-    - name: Short Sha
-      id: short-sha
-      run:  echo "::set-output name=short_sha::$(echo ${GITHUB_SHA} | cut -c1-10)"
-
-    - name: Push generated package to GitHub registry
-      run: dotnet nuget push ./bin/Packages/Release/LibGit2Sharp.0.27.0-preview-g${{steps.short-sha.outputs.short_sha}}.nupkg --source https://nuget.pkg.github.com/dotdevelop --api-key ${{github.token}} --skip-duplicate --no-symbols true
-
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: true
-          prerelease: true
-    - name: Upload Release Asset
-      id: upload-release-asset
-      uses: actions/upload-release-asset@v1
-      env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SHORT_SHA: ${{ steps.short-sha.outputs.short_sha }}
-      with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-          asset_path: ./bin/Packages/Release/LibGit2Sharp.0.27.0-preview-g${{steps.short-sha.outputs.short_sha}}.nupkg
-          asset_name: LibGit2Sharp.0.27.0-preview-g${{steps.short-sha.outputs.short_sha}}.nupkg
-          asset_content_type: application/nupkg
-
-  test:
-    runs-on: ubuntu-20.04
-
-    steps:
-    - uses: actions/checkout@v2
-      with:
-          fetch-depth: 0
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 3.1.401
-    - name: Restore dependencies
-      run: dotnet restore LibGit2Sharp.sln
-    - name: Build
-      run: dotnet build --no-restore LibGit2Sharp.sln
-
     - name: Test
       run: dotnet test --no-build --verbosity normal LibGit2Sharp.sln
+   
