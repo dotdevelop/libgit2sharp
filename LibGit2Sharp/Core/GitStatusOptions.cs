@@ -13,6 +13,8 @@ namespace LibGit2Sharp.Core
 
         public GitStrArrayManaged PathSpec;
 
+        public unsafe void* Baseline = (void*)0;
+
         public void Dispose()
         {
             PathSpec.Dispose();
