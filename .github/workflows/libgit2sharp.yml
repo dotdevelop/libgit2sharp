@@ -2,9 +2,9 @@ name: .NET
 
 on:
   push:
-    branches: [ dotdevelop ]
+    branches: [ dd/issues/2_merge_libgit_repo_1 ]
   pull_request:
-    branches: [ dotdevelop ]
+    branches: [ dd/issues/2_merge_libgit_repo_1 ]
 
 jobs:
   build:
