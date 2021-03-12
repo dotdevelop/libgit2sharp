@@ -2,9 +2,9 @@ name: .NET
 
 on:
   push:
-    branches: [ dd/issues/2_merge_libgit_repo_1 ]
+    branches: [ dotdevelop ]
   pull_request:
-    branches: [ dd/issues/2_merge_libgit_repo_1 ]
+    branches: [ dotdevelop ]
 
 jobs:
   build:
@@ -15,7 +15,6 @@ jobs:
     - uses: actions/checkout@v2
       with:
           fetch-depth: 0
-          
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
