@@ -18,7 +18,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.1.401
+        dotnet-version: 3.1.403
     - name: Restore dependencies
       run: dotnet restore LibGit2Sharp.sln
     - name: Build
